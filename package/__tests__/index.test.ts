@@ -1,4 +1,4 @@
-import { sayHello } from '../src/index'
+import { sayHello } from '../src'
 
 describe('index.ts', () => {
     it('should pass', () => {
