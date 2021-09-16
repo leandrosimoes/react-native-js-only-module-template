@@ -1,5 +1,3 @@
-throw new Error()
-
 const fs = require('fs')
 const path = require('path')
 const readline = require("readline");
@@ -83,65 +81,80 @@ const DEFAULT_EXAMPLE_PATH = path.resolve(__dirname, "example")
 
 const renameFiles = (args) => {
     return new Promise(resolve => {
-        const [name, url, gitUrl, authorName, authorEmail] = args
+        try {
+            const [name, url, gitUrl, authorName, authorEmail] = args
 
-        // Replacing README.md files
-        fs.writeFileSync('README.md', `#${name}`)
-        fs.writeFileSync(path.resolve(DEFAULT_PACKAGE_PATH, "README.md"), `#${name}`)
+            // Replacing README.md files
+            fs.writeFileSync('README.md', `# ${name}`)
+            fs.writeFileSync(path.resolve(DEFAULT_PACKAGE_PATH, "README.md"), `# ${name}`)
 
-        // Modify `package.json`
-        const packageData = fs.readFileSync(path.resolve(DEFAULT_PACKAGE_PATH, "package.json")).toString()
-        const newPackageData = packageData
-                .replace(DEFAULT_GIT_URL, gitUrl)
-                .replace(DEFAULT_URL, url)
-                .replace(new RegExp(DEFAULT_NAME, 'g'), name)
-                .replace(DEFAULT_AUTHOR_NAME, authorName)
-                .replace(DEFAULT_AUTHOR_EMAIL, authorEmail)
-                .replace(/"description": ".+"/g, `"description": "A module by ${DEFAULT_AUTHOR_NAME}"`)
-                .replace(/"version": ".+"/g, '"version": "1.0.0"')
+            // Modify `package.json`
+            const packagePath = path.resolve(DEFAULT_PACKAGE_PATH, "package.json")
+            const packageData = fs.readFileSync(packagePath).toString()
+            const newPackageData = packageData
+                    .replace(DEFAULT_GIT_URL, gitUrl)
+                    .replace(DEFAULT_URL, url)
+                    .replace(new RegExp(DEFAULT_NAME, 'g'), name)
+                    .replace(DEFAULT_AUTHOR_NAME, authorName)
+                    .replace(DEFAULT_AUTHOR_EMAIL, authorEmail)
+                    .replace(/"description": ".+"/g, `"description": "A module by ${authorName}"`)
+                    .replace(/"title": ".+"/g, `"title": "A module by ${authorName}"`)
+                    .replace(/"version": ".+"/g, '"version": "1.0.0"')
 
-        fs.writeFileSync(path.resolve(DEFAULT_PACKAGE_PATH, "package.json"), newPackageData)
+            fs.writeFileSync(packagePath, newPackageData)
 
-        // Modify `package-lock.json`
-        const packageLockData = fs.readFileSync(path.resolve(DEFAULT_PACKAGE_PATH, "package-lock.json")).toString()
-        const newPackageLockData = packageLockData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
+            // Modify `package-lock.json`
+            const packageLockPath = path.resolve(DEFAULT_PACKAGE_PATH, "package-lock.json")
+            const packageLockData = fs.readFileSync(packageLockPath).toString()
+            const newPackageLockData = packageLockData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
 
-        fs.writeFileSync('package-lock.json', newPackageLockData)
+            fs.writeFileSync(packageLockPath, newPackageLockData)
 
-        // Modify author in `LICENSE`
-        const licenseData = fs.readFileSync(path.resolve(DEFAULT_PACKAGE_PATH, "LICENSE")).toString()
-        const newLicenseData = licenseData.replace(DEFAULT_AUTHOR_NAME, authorName)
-        fs.writeFileSync('LICENSE', newLicenseData)
+            // Modify author in `LICENSE`
+            const licensePath = path.resolve(DEFAULT_PACKAGE_PATH, "LICENSE")
+            const licenseData = fs.readFileSync(licensePath).toString()
+            const newLicenseData = licenseData.replace(DEFAULT_AUTHOR_NAME, authorName)
 
-        // Start renaming example project
-        // Remove package-lock.json
-        fs.unlinkSync(path.resolve(DEFAULT_EXAMPLE_PATH, 'package-lock.json'))
+            fs.writeFileSync(licensePath, newLicenseData)
 
-        // Modify `package.json`
-        const packageDataSample = fs.readFileSync(path.resolve(DEFAULT_EXAMPLE_PATH, "package.json")).toString()
-        const newPackageDataSample = packageDataSample.replace(new RegExp(DEFAULT_NAME, 'g'), name)
+            // Start renaming example project
+            // Remove package-lock.json
+            if (fs.existsSync(path.resolve(DEFAULT_EXAMPLE_PATH, 'package-lock.json')))
+                fs.unlinkSync(path.resolve(DEFAULT_EXAMPLE_PATH, 'package-lock.json'))
 
-        fs.writeFileSync(path.resolve(DEFAULT_EXAMPLE_PATH, "package.json"), newPackageDataSample)
+            // Modify `package.json`
+            const packageSamplePath = path.resolve(DEFAULT_EXAMPLE_PATH, "package.json")
+            const packageDataSample = fs.readFileSync(packageSamplePath).toString()
+            const newPackageDataSample = packageDataSample.replace(new RegExp(DEFAULT_NAME, 'g'), name)
 
-        // Modify `prepare.js`
-        const prepareJSData = fs.readFileSync(path.resolve(DEFAULT_EXAMPLE_PATH, "prepare.js")).toString()
-        const newPrepareJSData = prepareJSData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
+            fs.writeFileSync(packageSamplePath, newPackageDataSample)
 
-        fs.writeFileSync(path.resolve(DEFAULT_EXAMPLE_PATH, "prepare.js"), newPrepareJSData)
+            // Modify `prepare.js`
+            const prepareJSPath = path.resolve(DEFAULT_EXAMPLE_PATH, "prepare.js")
+            const prepareJSData = fs.readFileSync(prepareJSPath).toString()
+            const newPrepareJSData = prepareJSData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
 
-        // Modify `README.md`
-        const readMeData = fs.readFileSync(path.resolve(DEFAULT_EXAMPLE_PATH, "README.md")).toString()
-        const newReadMeData = readMeData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
+            fs.writeFileSync(prepareJSPath, newPrepareJSData)
 
-        fs.writeFileSync(path.resolve(DEFAULT_EXAMPLE_PATH, "README.md"), newReadMeData)
+            // Modify `README.md`
+            const readMePath = path.resolve(DEFAULT_EXAMPLE_PATH, "README.md")
+            const readMeData = fs.readFileSync(readMePath).toString()
+            const newReadMeData = readMeData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
 
-        // Modify `index.tsx`
-        const indexTSXData = fs.readFileSync(path.resolve(DEFAULT_EXAMPLE_PATH, "src", "App", "index.tsx")).toString()
-        const newIndexTSXData = indexTSXData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
+            fs.writeFileSync(readMePath, newReadMeData)
 
-        fs.writeFileSync(path.resolve(DEFAULT_EXAMPLE_PATH, "src", "App", "index.tsx"), newIndexTSXData)
+            // Modify `index.tsx`
+            const indexTSXPath = path.resolve(DEFAULT_EXAMPLE_PATH, "src", "App", "index.tsx")
+            const indexTSXData = fs.readFileSync(indexTSXPath).toString()
+            const newIndexTSXData = indexTSXData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
 
-        resolve()
+            fs.writeFileSync(indexTSXPath, newIndexTSXData)
+
+            resolve()
+        } catch (error) {
+            printError(error.message)
+            process.exit(1)
+        }
     })
 }
 
