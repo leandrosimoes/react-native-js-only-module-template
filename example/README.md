@@ -1,23 +1,18 @@
 # Sample project for the react-native-js-only-module-template package
 
-This is a sample project about the usage of the `react-native-js-only-module-template` package. (Android Only)
+This is a sample project about the usage of the `react-native-js-only-module-template` package.
 
-## Preparing
+## Preparing project
 
-First execute `npm i` at the `example/` folder
-
-### React Native < 0.60
-
-Execute `react-native link react-native-js-only-module-template` to link the library to you project in the `example/` folder
-
-### React Native >= 0.60
-
-No need to do anything else, the libraries are linked automatically
+1 - In the `example/` folder
+2 - Execute `npm i`
+3 - Execute `node prepare.js` or `npm run update`
 
 ## Running
 
 Execute `npm start` in the `example/` folder
 
-## What else?
+## Updating the package with last modifications
 
-Enjoy!
+1 - All changes that you do in the `package/`, don't forget to execute `npm run build` to compile and regenerate the `bin/` folder
+2 - Then in this project just run `npm run update` or `node prepare.js` to update the package with the last compiled files from the `package/bin/` folder

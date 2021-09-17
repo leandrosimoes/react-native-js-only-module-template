@@ -4,3 +4,5 @@ exclude_paths:
   - '**/.vscode/**'
   - '**/example/**'
   - '**.md'
+  - '**/rename.js'
+  - '**/prepare.js'

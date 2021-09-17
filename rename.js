@@ -1,3 +1,4 @@
+const { execSync } = require('child_process')
 const fs = require('fs')
 const path = require('path')
 const readline = require("readline");
@@ -84,10 +85,6 @@ const renameFiles = (args) => {
         try {
             const [name, url, gitUrl, authorName, authorEmail] = args
 
-            // Replacing README.md files
-            fs.writeFileSync('README.md', `# ${name}`)
-            fs.writeFileSync(path.resolve(DEFAULT_PACKAGE_PATH, "README.md"), `# ${name}`)
-
             // Modify `package.json`
             const packagePath = path.resolve(DEFAULT_PACKAGE_PATH, "package.json")
             const packageData = fs.readFileSync(packagePath).toString()
@@ -149,6 +146,10 @@ const renameFiles = (args) => {
             const newIndexTSXData = indexTSXData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
 
             fs.writeFileSync(indexTSXPath, newIndexTSXData)
+
+            // Delete the .git
+            if (fs.existsSync(path.resolve(__dirname, '.git')))
+                execSync('rm -rf .git')
 
             resolve()
         } catch (error) {
