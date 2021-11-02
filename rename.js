@@ -58,7 +58,9 @@ const printInfo = (message) => {
 
 const asyncQuestion = async ({ question, isRequired = true, paramName = 'Unknown', defaultValue = '' }) => {
     return new Promise(resolve => {
-        rl.question(`${colours.fg.blue}${question}${colours.reset}`, (answer) => {
+        const currentQuestion = typeof question === 'function' ? question() : question
+
+        rl.question(`${colours.fg.blue}${currentQuestion}${colours.reset}`, (answer) => {
             if (!answer && isRequired && !defaultValue) {
                 printError(`"${paramName}" param isRequired`)
                 printWarning('Aborting...')
@@ -88,8 +90,7 @@ const DEFAULT_AUTHOR_NAME = 'Leandro Simões'
 const DEFAULT_AUTHOR_EMAIL = 'leandro.simoes@outlook.com'
 
 const QUESTION_NAME = `Enter library name (use kebab-case) (default ${DEFAULT_NAME}): `
-const QUESTION_USER = `Enter user name (default ${DEFAULT_USER}): `
-const QUESTION_GIT_URL = `Enter library git url (default ${DEFAULT_GIT_URL}): `
+const QUESTION_USER = `Enter user name (default ${ORIGIN_USER_NAME}): `
 const QUESTION_AUTHOR_NAME = `Enter author name (default ${DEFAULT_AUTHOR_NAME}): `
 const QUESTION_AUTHOR_EMAIL = `Enter author email (default ${DEFAULT_AUTHOR_EMAIL}): `
 const QUESTION_DELETE_GIT_FOLDER = 'Delete .git folder (Y or N)? (default N)'
@@ -186,12 +187,12 @@ const renameFiles = (args) => {
         {
             question: QUESTION_USER,
             paramName: 'User Name',
-            defaultValue: DEFAULT_USER
+            defaultValue: ORIGIN_USER_NAME
         },
         {
-            question: QUESTION_GIT_URL,
+            question: () => `Enter library git url (default https://github.com/${CURRENT_USER_NAME}/${DEFAULT_NAME}.git: `,
             paramName: 'Library Git URL',
-            defaultValue: () => `https://github.com/${DEFAULT_USER}/${DEFAULT_NAME}.git`
+            defaultValue: () => `https://github.com/${CURRENT_USER_NAME}/${DEFAULT_NAME}.git`
         },
         {
             question: QUESTION_AUTHOR_NAME,
