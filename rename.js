@@ -83,33 +83,33 @@ const DEFAULT_PACKAGE_PATH = path.resolve(__dirname, "package")
 const DEFAULT_EXAMPLE_PATH = path.resolve(__dirname, "example")
 
 const ORIGIN_LIBRARY_NAME = 'react-native-js-only-module-template'
-let CURRENT_LIBRARY_NAME = ORIGIN_LIBRARY_NAME
 const ORIGIN_USER_NAME = 'leandrosimoes'
 let CURRENT_USER_NAME = ORIGIN_USER_NAME
+const DEFAULT_NAME = path.basename(process.cwd()) || ORIGIN_LIBRARY_NAME
 const DEFAULT_AUTHOR_NAME = 'Leandro Simões'
 const DEFAULT_AUTHOR_EMAIL = 'leandro.simoes@outlook.com'
 
-const QUESTION_NAME = `Enter library name (use kebab-case) (default ${ORIGIN_LIBRARY_NAME}): `
+const QUESTION_NAME = `Enter library name (use kebab-case) (default ${DEFAULT_NAME}): `
 const QUESTION_USER = `Enter user name (default ${ORIGIN_USER_NAME}): `
-const QUESTION_GIT_URL = () => `Enter library git url (default https://github.com/${CURRENT_USER_NAME}/${CURRENT_LIBRARY_NAME}.git: `
-const QUESTION_AUTHOR_NAME = () => `Enter author name (default ${CURRENT_USER_NAME}): `
-const QUESTION_AUTHOR_EMAIL = () => `Enter author email (default ${CURRENT_USER_NAME}): `
+const QUESTION_AUTHOR_NAME = `Enter author name (default ${DEFAULT_AUTHOR_NAME}): `
+const QUESTION_AUTHOR_EMAIL = `Enter author email (default ${DEFAULT_AUTHOR_EMAIL}): `
 const QUESTION_DELETE_GIT_FOLDER = 'Delete .git folder (Y or N)? (default N)'
-const DEFAULT_GIT_URL = () => `https://github.com/${CURRENT_USER_NAME}/${CURRENT_LIBRARY_NAME}.git`
-const ORIGIN_GIT_URL = `https://github.com/${ORIGIN_USER_NAME}/${ORIGIN_LIBRARY_NAME}.git`
 
 const renameFiles = (args) => {
     return new Promise(resolve => {
         try {
-            const [name, userName, gitUrl, authorName, authorEmail, deleteGitFolder] = args
+            const [name, gitUrl, authorName, authorEmail, deleteGitFolder] = args
 
             // Modify `package.json`
             const packagePath = path.resolve(DEFAULT_PACKAGE_PATH, "package.json")
             const packageData = fs.readFileSync(packagePath).toString()
+            const gitUrlOrigin = DEFAULT_GIT_URL
+                                    .replace(DEFAULT_NAME, ORIGIN_LIBRARY_NAME)
+                                    .replace(CURRENT_USER_NAME, ORIGIN_USER_NAME)
 
             const newPackageData = packageData
-                    .replace(new RegExp(ORIGIN_GIT_URL.replace('.git', ''), 'g'), gitUrl.replace('.git', ''))
-                    .replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
+                    .replace(gitUrlOrigin, gitUrl)
+                    .replace(new RegExp(DEFAULT_NAME, 'g'), name)
                     .replace(DEFAULT_AUTHOR_NAME, authorName)
                     .replace(DEFAULT_AUTHOR_EMAIL, authorEmail)
                     .replace(/"description": ".+"/g, `"description": "A module by ${authorName}"`)
@@ -121,7 +121,7 @@ const renameFiles = (args) => {
             // Modify `package-lock.json`
             const packageLockPath = path.resolve(DEFAULT_PACKAGE_PATH, "package-lock.json")
             const packageLockData = fs.readFileSync(packageLockPath).toString()
-            const newPackageLockData = packageLockData.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
+            const newPackageLockData = packageLockData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
 
             fs.writeFileSync(packageLockPath, newPackageLockData)
 
@@ -140,28 +140,28 @@ const renameFiles = (args) => {
             // Modify `package.json`
             const packageSamplePath = path.resolve(DEFAULT_EXAMPLE_PATH, "package.json")
             const packageDataSample = fs.readFileSync(packageSamplePath).toString()
-            const newPackageDataSample = packageDataSample.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
+            const newPackageDataSample = packageDataSample.replace(new RegExp(DEFAULT_NAME, 'g'), name)
 
             fs.writeFileSync(packageSamplePath, newPackageDataSample)
 
             // Modify `prepare.js`
             const prepareJSPath = path.resolve(DEFAULT_EXAMPLE_PATH, "prepare.js")
             const prepareJSData = fs.readFileSync(prepareJSPath).toString()
-            const newPrepareJSData = prepareJSData.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
+            const newPrepareJSData = prepareJSData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
 
             fs.writeFileSync(prepareJSPath, newPrepareJSData)
 
             // Modify `README.md`
             const readMePath = path.resolve(DEFAULT_EXAMPLE_PATH, "README.md")
             const readMeData = fs.readFileSync(readMePath).toString()
-            const newReadMeData = readMeData.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
+            const newReadMeData = readMeData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
 
             fs.writeFileSync(readMePath, newReadMeData)
 
             // Modify `index.tsx`
             const indexTSXPath = path.resolve(DEFAULT_EXAMPLE_PATH, "src", "App", "index.tsx")
             const indexTSXData = fs.readFileSync(indexTSXPath).toString()
-            const newIndexTSXData = indexTSXData.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
+            const newIndexTSXData = indexTSXData.replace(new RegExp(DEFAULT_NAME, 'g'), name)
 
             fs.writeFileSync(indexTSXPath, newIndexTSXData)
 
@@ -182,7 +182,7 @@ const renameFiles = (args) => {
         {
             question: QUESTION_NAME,
             paramName: 'Library Name',
-            defaultValue: CURRENT_LIBRARY_NAME
+            defaultValue: DEFAULT_NAME
         },
         {
             question: QUESTION_USER,
@@ -190,19 +190,19 @@ const renameFiles = (args) => {
             defaultValue: ORIGIN_USER_NAME
         },
         {
-            question: QUESTION_GIT_URL,
+            question: () => `Enter library git url (default https://github.com/${CURRENT_USER_NAME}/${DEFAULT_NAME}.git: `,
             paramName: 'Library Git URL',
-            defaultValue: DEFAULT_GIT_URL
+            defaultValue: () => `https://github.com/${CURRENT_USER_NAME}/${DEFAULT_NAME}.git`
         },
         {
             question: QUESTION_AUTHOR_NAME,
             paramName: 'Author Name',
-            defaultValue: () => CURRENT_USER_NAME
+            defaultValue: DEFAULT_AUTHOR_NAME
         },
         {
             question: QUESTION_AUTHOR_EMAIL,
             paramName: 'Author Email',
-            defaultValue: () => CURRENT_USER_NAME
+            defaultValue: DEFAULT_AUTHOR_EMAIL
         },
         {
             question: QUESTION_DELETE_GIT_FOLDER,
@@ -215,9 +215,6 @@ const renameFiles = (args) => {
 
     await asyncForEach(questions, async (question) => {
         const answer = await asyncQuestion({ ...question })
-
-        if (question.paramName === 'Library Name')
-            CURRENT_LIBRARY_NAME = answer || ORIGIN_LIBRARY_NAME
 
         if (question.paramName === 'User Name')
             CURRENT_USER_NAME = answer || ORIGIN_USER_NAME

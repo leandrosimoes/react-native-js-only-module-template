@@ -4,9 +4,9 @@ const path = require('path')
 const PACKAGE_PATH = path.resolve(__dirname, '../package')
 const PACKAGE_PATH_LIB = path.resolve(__dirname, '../package/lib')
 const NODE_MODULES_DEST_PATH = path.resolve(__dirname, 'node_modules')
-const PACKAGE_DEST_PATH = path.resolve(__dirname, 'node_modules/test')
+const PACKAGE_DEST_PATH = path.resolve(__dirname, 'node_modules/react-native-js-only-module-template')
 
-console.log('Preparing test...')
+console.log('Preparing react-native-js-only-module-template...')
 console.log(PACKAGE_PATH, PACKAGE_DEST_PATH)
 
 function createPathIfNotExists(path) {
