@@ -57,5 +57,6 @@
         "paths": ["src"]
       }
     }
-  }
+  },
+  "ignorePatterns": ["metro.config.js", "babel.config.js", "prepare.js"]
 }
