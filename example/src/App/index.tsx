@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import { sayHello } from 'react-native-js-only-module-template'
+import { sayHello } from 'test'
 
 import styles from './styles'
 

@@ -1,6 +1,6 @@
-# Sample project for the react-native-js-only-module-template package
+# Sample project for the test package
 
-This is a sample project about the usage of the `react-native-js-only-module-template` package.
+This is a sample project about the usage of the `test` package.
 
 ## Preparing project
 

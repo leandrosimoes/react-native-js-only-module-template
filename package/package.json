@@ -1,8 +1,8 @@
 {
-  "name": "react-native-js-only-module-template",
-  "title": "React Native JS Only Module Template",
+  "name": "test",
+  "title": "A module by lucas",
   "version": "1.0.0",
-  "description": "React Native JS Only Module Template",
+  "description": "A module by lucas",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -20,8 +20,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leandrosimoes/react-native-js-only-module-template.git",
-    "baseUrl": "https://github.com/leandrosimoes/react-native-js-only-module-template"
+    "url": "git+https://github.com/lucas/test.git",
+    "baseUrl": "https://github.com/lucas/test"
   },
   "keywords": [
     "react-native",
@@ -31,8 +31,8 @@
     "template"
   ],
   "author": {
-    "name": "Leandro Simões",
-    "email": "leandro.simoes@outlook.com"
+    "name": "lucas",
+    "email": "lucas"
   },
   "license": "MIT",
   "licenseFilename": "LICENSE",
