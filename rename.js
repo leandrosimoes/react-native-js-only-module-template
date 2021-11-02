@@ -125,6 +125,13 @@ const renameFiles = (args) => {
 
             fs.writeFileSync(packageLockPath, newPackageLockData)
 
+            // Modify `README.md`
+            const readMePath = path.resolve(DEFAULT_PACKAGE_PATH, "README.md")
+            const readMeData = fs.readFileSync(readMePath).toString()
+            const newReadMeData = readMeData.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
+
+            fs.writeFileSync(readMePath, newReadMeData)
+
             // Modify author in `LICENSE`
             const licensePath = path.resolve(DEFAULT_PACKAGE_PATH, "LICENSE")
             const licenseData = fs.readFileSync(licensePath).toString()
