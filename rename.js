@@ -103,6 +103,11 @@ const renameFiles = (args) => {
         try {
             const [name, userName, gitUrl, authorName, authorEmail, deleteGitFolder] = args
 
+            // Modify `README.md`
+            const readMePath = path.resolve(__dirname, "README.md")
+            const readMeData = fs.readFileSync(readMePath).toString()
+            const newReadMeData = readMeData.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
+
             // Modify `package.json`
             const packagePath = path.resolve(DEFAULT_PACKAGE_PATH, "package.json")
             const packageData = fs.readFileSync(packagePath).toString()
@@ -126,11 +131,11 @@ const renameFiles = (args) => {
             fs.writeFileSync(packageLockPath, newPackageLockData)
 
             // Modify `README.md`
-            const readMePath = path.resolve(DEFAULT_PACKAGE_PATH, "README.md")
-            const readMeData = fs.readFileSync(readMePath).toString()
-            const newReadMeData = readMeData.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
+            const readMePath2 = path.resolve(DEFAULT_PACKAGE_PATH, "README.md")
+            const readMeData2 = fs.readFileSync(readMePath2).toString()
+            const newReadMeData2 = readMeData2.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
 
-            fs.writeFileSync(readMePath, newReadMeData)
+            fs.writeFileSync(readMePath2, newReadMeData2)
 
             // Modify author in `LICENSE`
             const licensePath = path.resolve(DEFAULT_PACKAGE_PATH, "LICENSE")
@@ -159,11 +164,11 @@ const renameFiles = (args) => {
             fs.writeFileSync(prepareJSPath, newPrepareJSData)
 
             // Modify `README.md`
-            const readMePath = path.resolve(DEFAULT_EXAMPLE_PATH, "README.md")
-            const readMeData = fs.readFileSync(readMePath).toString()
-            const newReadMeData = readMeData.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
+            const readMePath3 = path.resolve(DEFAULT_EXAMPLE_PATH, "README.md")
+            const readMeData3 = fs.readFileSync(readMePath3).toString()
+            const newReadMeData3 = readMeData3.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
 
-            fs.writeFileSync(readMePath, newReadMeData)
+            fs.writeFileSync(readMePath3, newReadMeData3)
 
             // Modify `index.tsx`
             const indexTSXPath = path.resolve(DEFAULT_EXAMPLE_PATH, "src", "App", "index.tsx")
