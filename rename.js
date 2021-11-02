@@ -83,7 +83,7 @@ const DEFAULT_PACKAGE_PATH = path.resolve(__dirname, "package")
 const DEFAULT_EXAMPLE_PATH = path.resolve(__dirname, "example")
 
 const ORIGIN_LIBRARY_NAME = 'react-native-js-only-module-template'
-let CURRENT_LIBRARY_NAME = ORIGIN_LIBRARY_NAME
+let CURRENT_LIBRARY_NAME = path.basename(process.cwd()) || ORIGIN_LIBRARY_NAME
 const ORIGIN_USER_NAME = 'leandrosimoes'
 let CURRENT_USER_NAME = ORIGIN_USER_NAME
 const DEFAULT_AUTHOR_NAME = 'Leandro Simões'
