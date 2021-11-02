@@ -66,7 +66,7 @@ const asyncQuestion = async ({ question, isRequired = true, paramName = 'Unknown
                 return
             }
 
-            resolve(answer || defaultValue)
+            resolve(answer || (typeof defaultValue === 'function' ? defaultValue() : defaultValue))
         })
     })
 }
@@ -80,17 +80,34 @@ const asyncForEach = async (array, callback) => {
 const DEFAULT_PACKAGE_PATH = path.resolve(__dirname, "package")
 const DEFAULT_EXAMPLE_PATH = path.resolve(__dirname, "example")
 
+const ORIGIN_LIBRARY_NAME = 'react-native-js-only-module-template'
+const ORIGIN_USER_NAME = 'leandrosimoes'
+let CURRENT_USER_NAME = ORIGIN_USER_NAME
+const DEFAULT_NAME = path.basename(process.cwd()) || ORIGIN_LIBRARY_NAME
+const DEFAULT_AUTHOR_NAME = 'Leandro Simões'
+const DEFAULT_AUTHOR_EMAIL = 'leandro.simoes@outlook.com'
+
+const QUESTION_NAME = `Enter library name (use kebab-case) (default ${DEFAULT_NAME}): `
+const QUESTION_USER = `Enter user name (default ${DEFAULT_USER}): `
+const QUESTION_GIT_URL = `Enter library git url (default ${DEFAULT_GIT_URL}): `
+const QUESTION_AUTHOR_NAME = `Enter author name (default ${DEFAULT_AUTHOR_NAME}): `
+const QUESTION_AUTHOR_EMAIL = `Enter author email (default ${DEFAULT_AUTHOR_EMAIL}): `
+const QUESTION_DELETE_GIT_FOLDER = 'Delete .git folder (Y or N)? (default N)'
+
 const renameFiles = (args) => {
     return new Promise(resolve => {
         try {
-            const [name, url, gitUrl, authorName, authorEmail] = args
+            const [name, gitUrl, authorName, authorEmail, deleteGitFolder] = args
 
             // Modify `package.json`
             const packagePath = path.resolve(DEFAULT_PACKAGE_PATH, "package.json")
             const packageData = fs.readFileSync(packagePath).toString()
+            const gitUrlOrigin = DEFAULT_GIT_URL
+                                    .replace(DEFAULT_NAME, ORIGIN_LIBRARY_NAME)
+                                    .replace(CURRENT_USER_NAME, ORIGIN_USER_NAME)
+
             const newPackageData = packageData
-                    .replace(DEFAULT_GIT_URL, gitUrl)
-                    .replace(DEFAULT_URL, url)
+                    .replace(gitUrlOrigin, gitUrl)
                     .replace(new RegExp(DEFAULT_NAME, 'g'), name)
                     .replace(DEFAULT_AUTHOR_NAME, authorName)
                     .replace(DEFAULT_AUTHOR_EMAIL, authorEmail)
@@ -148,7 +165,7 @@ const renameFiles = (args) => {
             fs.writeFileSync(indexTSXPath, newIndexTSXData)
 
             // Delete the .git
-            if (fs.existsSync(path.resolve(__dirname, '.git')))
+            if (deleteGitFolder === 'Y' && fs.existsSync(path.resolve(__dirname, '.git')))
                 execSync('rm -rf .git')
 
             resolve()
@@ -159,19 +176,6 @@ const renameFiles = (args) => {
     })
 }
 
-const DEFAULT_USER = 'leandrosimoes'
-const DEFAULT_NAME = 'react-native-js-only-module-template'
-const DEFAULT_URL = `https://github.com/${DEFAULT_USER}/${DEFAULT_NAME}`
-const DEFAULT_GIT_URL = `https://github.com/${DEFAULT_USER}/${DEFAULT_NAME}.git`
-const DEFAULT_AUTHOR_NAME = 'Leandro Simões'
-const DEFAULT_AUTHOR_EMAIL = 'leandro.simoes@outlook.com'
-
-const QUESTION_NAME = `Enter library name (use kebab-case) (default ${DEFAULT_NAME}): `
-const QUESTION_URL = `Enter library homepage (default ${DEFAULT_URL}): `
-const QUESTION_GIT_URL = `Enter library git url (default ${DEFAULT_GIT_URL}): `
-const QUESTION_AUTHOR_NAME = `Enter author name (default ${DEFAULT_AUTHOR_NAME}): `
-const QUESTION_AUTHOR_EMAIL = `Enter author email (default ${DEFAULT_AUTHOR_EMAIL}): `
-
 ;(async () => {
     const questions = [
         {
@@ -180,14 +184,14 @@ const QUESTION_AUTHOR_EMAIL = `Enter author email (default ${DEFAULT_AUTHOR_EMAI
             defaultValue: DEFAULT_NAME
         },
         {
-            question: QUESTION_URL,
-            paramName: 'Library Homepage',
-            defaultValue: DEFAULT_URL
+            question: QUESTION_USER,
+            paramName: 'User Name',
+            defaultValue: DEFAULT_USER
         },
         {
             question: QUESTION_GIT_URL,
             paramName: 'Library Git URL',
-            defaultValue: DEFAULT_GIT_URL
+            defaultValue: () => `https://github.com/${DEFAULT_USER}/${DEFAULT_NAME}.git`
         },
         {
             question: QUESTION_AUTHOR_NAME,
@@ -199,12 +203,21 @@ const QUESTION_AUTHOR_EMAIL = `Enter author email (default ${DEFAULT_AUTHOR_EMAI
             paramName: 'Author Email',
             defaultValue: DEFAULT_AUTHOR_EMAIL
         },
+        {
+            question: QUESTION_DELETE_GIT_FOLDER,
+            paramName: 'Author Email',
+            defaultValue: 'N'
+        },
     ]
 
     const answers = []
 
     await asyncForEach(questions, async (question) => {
         const answer = await asyncQuestion({ ...question })
+
+        if (question.paramName === 'User Name')
+            CURRENT_USER_NAME = answer || ORIGIN_USER_NAME
+
         answers.push(answer)
     })
 
