@@ -108,6 +108,8 @@ const renameFiles = (args) => {
             const readMeData = fs.readFileSync(readMePath).toString()
             const newReadMeData = readMeData.replace(new RegExp(ORIGIN_LIBRARY_NAME, 'g'), name)
 
+            fs.writeFileSync(readMePath, newReadMeData)
+
             // Modify `package.json`
             const packagePath = path.resolve(DEFAULT_PACKAGE_PATH, "package.json")
             const packageData = fs.readFileSync(packagePath).toString()
