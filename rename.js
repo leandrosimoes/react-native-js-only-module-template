@@ -89,7 +89,7 @@ let CURRENT_USER_NAME = ORIGIN_USER_NAME
 const DEFAULT_AUTHOR_NAME = 'Leandro Simões'
 const DEFAULT_AUTHOR_EMAIL = 'leandro.simoes@outlook.com'
 
-const QUESTION_NAME = `Enter library name (use kebab-case) (default ${ORIGIN_LIBRARY_NAME}): `
+const QUESTION_NAME = `Enter library name (use kebab-case) (default ${CURRENT_LIBRARY_NAME}): `
 const QUESTION_USER = `Enter user name (default ${ORIGIN_USER_NAME}): `
 const QUESTION_GIT_URL = () => `Enter library git url (default https://github.com/${CURRENT_USER_NAME}/${CURRENT_LIBRARY_NAME}.git: `
 const QUESTION_AUTHOR_NAME = () => `Enter author name (default ${CURRENT_USER_NAME}): `
