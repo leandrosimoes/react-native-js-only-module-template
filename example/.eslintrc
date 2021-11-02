@@ -3,7 +3,7 @@
   "extends": [
     "airbnb",
     "prettier",
-    "prettier/react"
+    "plugin:import/typescript"
   ],
   "rules": {
     "radix": 0,
@@ -11,6 +11,7 @@
     "no-return-await": 0,
     "no-empty": 0,
     "no-param-reassign": 0,
+    "arrow-body-style": 0,
     "react-hooks/exhaustive-deps": 0,
     "react/static-property-placement": 0,
     "react/jsx-props-no-spreading": 0,
@@ -20,7 +21,9 @@
       {
         "extensions": [
           ".js",
-          ".jsx"
+          ".jsx",
+          ".ts",
+          ".tsx"
         ]
       }
     ],
@@ -50,7 +53,7 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
         "paths": ["src"]
       }
     }

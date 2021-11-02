@@ -1,18 +1,22 @@
 const fs = require('fs')
 const { exec } = require('child_process')
 const path = require('path')
+
 const PACKAGE_PATH = path.resolve(__dirname, '../package')
 const PACKAGE_PATH_LIB = path.resolve(__dirname, '../package/lib')
 const NODE_MODULES_DEST_PATH = path.resolve(__dirname, 'node_modules')
-const PACKAGE_DEST_PATH = path.resolve(__dirname, 'node_modules/react-native-js-only-module-template')
+const PACKAGE_DEST_PATH = path.resolve(
+    __dirname,
+    'node_modules/react-native-js-only-module-template'
+)
 
 console.log('Preparing react-native-js-only-module-template...')
 console.log(PACKAGE_PATH, PACKAGE_DEST_PATH)
 
-function createPathIfNotExists(path) {
-    return new Promise(resolve => {
-        if (!fs.existsSync(path)) {
-            fs.mkdirSync(path, { recursive: true })
+function createPathIfNotExists(pathToCreate) {
+    return new Promise((resolve) => {
+        if (!fs.existsSync(pathToCreate)) {
+            fs.mkdirSync(pathToCreate, { recursive: true })
         }
 
         resolve()
@@ -27,7 +31,7 @@ function executeAsync(command) {
                 reject()
                 return
             }
-        
+
             console.log(stdout)
             console.log(stderr)
 
@@ -39,14 +43,16 @@ function executeAsync(command) {
 ;(async () => {
     try {
         await createPathIfNotExists(PACKAGE_DEST_PATH)
-        
+
         await executeAsync(`rm -rf ${PACKAGE_DEST_PATH}`)
         await createPathIfNotExists(NODE_MODULES_DEST_PATH)
         await createPathIfNotExists(PACKAGE_DEST_PATH)
 
         await executeAsync(`cp -r ${PACKAGE_PATH_LIB} ${PACKAGE_DEST_PATH}`)
         await executeAsync(`cp -f ${PACKAGE_PATH}/package.json ${PACKAGE_DEST_PATH}/package.json`)
-        await executeAsync(`cp -f ${PACKAGE_PATH}/package-lock.json ${PACKAGE_DEST_PATH}/package-lock.json`)
+        await executeAsync(
+            `cp -f ${PACKAGE_PATH}/package-lock.json ${PACKAGE_DEST_PATH}/package-lock.json`
+        )
     } catch (err) {
         console.error(err)
     }
