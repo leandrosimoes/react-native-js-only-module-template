@@ -20,7 +20,7 @@ There are some steps to help you setup this template for your package.
 2 - Inside the project's root folder (This folder here), execute the command `node rename.js`
 3 - Following all the cli steps, your project will be set up with the new data provided
 4 - Enter the `package/` folder and execute `npm i`
-5 - Execute `npm run build` to build and create the `bin/` folder
+5 - Execute `npm run build` to build and create the `lib/` folder
 
 ### If you DO NOT want to use the `example/` project
 
